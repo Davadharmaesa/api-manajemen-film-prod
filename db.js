@@ -1,5 +1,3 @@
-// const { text } = require('express');
-// const { Query } = require('mongoose');
 const { Pool } = require('pg');
 require('dotenv').config();
 
