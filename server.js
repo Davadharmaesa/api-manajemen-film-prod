@@ -29,7 +29,7 @@ app.get('/status', (req, res) => {
 // AUTH ROUTES (Refactored for pg) ====
 app.post('/auth/register', async (req, res, next) => {
     const { username, password } = req.body;
-    if (!username || !password || password.lenght < 6) {
+    if (!username || !password || password.length < 6) {
         return res.status(400).json({ error: `Username dan Password (min 6 char) harus diisi` });
     }
     try{
@@ -50,7 +50,7 @@ app.post('/auth/register', async (req, res, next) => {
 
 app.post('/auth/register-admin', async (req, res, next) => {
     const { username, password } = req.body;
-    if (!username || !password || password.lenght < 6) {
+    if (!username || !password || password.length < 6) {
         return res.status(400).json({ error: `Username dan Password (min 6 char) harus diisi` });
     }
     try {
@@ -58,7 +58,7 @@ app.post('/auth/register-admin', async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(password, salt);
         const sql = `INSERT INTO users (username, password, role) VALUES 
         ($1, $2, $3) RETURNING id, username`;
-        const result = await db.query(sql [username.toLowerCase(),
+        const result = await db.query(sql, [username.toLowerCase(),
             hashedPassword, 'admin']);
             res.status(201).json(result.rows[0]);
     }catch (err){
@@ -125,10 +125,10 @@ app.post('/auth/login', async (req, res, next) => {
 
 // MOVIE ROUTES (refactor for pg)
 app.get('/movies', async (req, res, next) => {
-    const sql = `SELECT m.id, m.tittle, m.year, d.id as director_id, d.name as director_name
+    const sql = `SELECT m.id, m.title, m.year, d.id as director_id, d.name as director_name
     FROM movies m
     LEFT JOIN directors d ON m.directors_id = d.id
-    ORDER BY m.id ACS`;
+    ORDER BY m.id ASC`;
     try{
         const result = await db.query(sql);
         res.json(result.rows);
@@ -193,7 +193,7 @@ app.put('/movies/:id', [authenticateToken, authorizeRole('admin')], async (req, 
 
 //Delete /movie/:id -End point menghapus file berdasarkan id
 app.delete('/movies/:id', [authenticateToken, authorizeRole('admin')], async (req, res, next) => {
-    const sql = `DELETE FROM movies WHERE id = $1 RETURNING *?`;
+    const sql = `DELETE FROM movies WHERE id = $1 RETURNING *`;
     try{
         const result = await db.query(sql, [req.params.id]);
         if(result.rowCount === 0){
@@ -295,11 +295,12 @@ app.delete('/directors/:id', [authenticateToken, authorizeRole('admin')], async 
 });
 
 
+// === FALLBACK & ERROR HANDLING ===
 app.use((req, res) => {
     res.status(404).json({ error: `Rute tidak ditemukan` });
 });
 
-app.use((req, res, next) => {
+app.use((err, req, res, next) => {
     console.error('[SERVER ERROR]', err.stack);
     res.status(500).json({ error: `Terjadi kesalahan pada server` });
 });
