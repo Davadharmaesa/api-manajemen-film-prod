@@ -1,6 +1,6 @@
-const { text } = require('express');
-const { Query } = require('mongoose');
-const { pool, Pool } = require('pg');
+// const { text } = require('express');
+// const { Query } = require('mongoose');
+const { Pool } = require('pg');
 require('dotenv').config();
 
 const pool = new Pool({

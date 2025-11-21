@@ -46,7 +46,7 @@ app.post('/auth/register', async (req, res, next) => {
         }
         next(err);
     }
-})
+});
 
 app.post('/auth/register-admin', async (req, res, next) => {
     const { username, password } = req.body;
@@ -67,7 +67,7 @@ app.post('/auth/register-admin', async (req, res, next) => {
         }
         next(err);
     }
-})
+});
 
 
 // Endpoint untuk mendapatkan semua film
