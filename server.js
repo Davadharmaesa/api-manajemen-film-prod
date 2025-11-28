@@ -127,12 +127,13 @@ app.post('/auth/login', async (req, res, next) => {
 app.get('/movies', async (req, res, next) => {
     const sql = `SELECT m.id, m.title, m.year, d.id as director_id, d.name as director_name
     FROM movies m
-    LEFT JOIN directors d ON m.directors_id = d.id
+    LEFT JOIN directors d ON m.director_id = d.id
     ORDER BY m.id ASC`;
-    try{
+
+    try {
         const result = await db.query(sql);
         res.json(result.rows);
-    } catch (err){
+    } catch (err) {
         next(err);
     }
 });
